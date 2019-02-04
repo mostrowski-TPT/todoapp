@@ -2,6 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Grid } from '@material-ui/core';
+import moment from 'moment';
+
+
+
+
+class Todo extends React.Component {
+constructor(props){
+super(props);
+this.updatedate = this.updatedate.bind(this);
+}
+
+updatedate(this.props.date){
+  let timeleft = moment(this.props.date).startOf('day').fromNow();
+  this.setState({
+timeleft: timeleft;
+  });
+}
+
+
+  
+
+
+}
+
+
+
+
+
+
+
 
 
 const styles = theme => ({
@@ -34,7 +64,9 @@ constructor(props){
   render(){
 const {classes} = this.props;
 let todos = this.props.todos;
-        let todoslist = todos.map((todo, index)=> <Grid item key={todo.name+index}><Paper style={paperstyle}><Typography>{todo.name}</Typography></Paper></Grid>);
+console.log("date in todos", this.props.todos)
+console.log(todos);
+        let todoslist = todos.map((todo, index)=> <Grid item key={todo.name+index}><Paper style={paperstyle}><Typography>{todo.name}<br></br>Deadline: {moment(todo.date).format('MMMM Do YYYY, h:mm:ss a')}</Typography></Paper></Grid>);
     return (   
         <div>
             <Grid container  direction="row"

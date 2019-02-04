@@ -11,6 +11,9 @@ import SearchAppBar from './components/searchappbar';
 import SimpleTooltips from './components/tooltip';
 import Todos from './components/todos';
 import FormDialog from './components/popup';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, TimePicker, DatePicker } from 'material-ui-pickers';
+import moment from 'moment';
 
 const theme = createMuiTheme({
   typography: {
@@ -32,32 +35,35 @@ class App extends Component {
 this.state={
   todos: [],
   open: false,
-  selectedDate: new Date()
 }
 this.addToDo = this.addToDo.bind(this);
 this.clearAll = this.clearAll.bind(this);
 this.handleClickOpen = this.handleClickOpen.bind(this);
 this.handleClose = this.handleClose.bind(this);
-this.handleDateChange = this.handleDateChange.bind(this);
  }
   
-addToDo(name){
+addToDo(name, date){
   let todos = this.state.todos.slice();  
-  todos.push({name: name});  
+  console.log("date in addtodo ", date)
+  todos.push({name: name, date: date, 
+  timeelapsed: null
+  });  
 this.setState({
 todos: todos,
 });
 }
+
+estimatetime(todo){
+let deadline = todo.date;
+let timeleft = 
+}
+
 
 clearAll(event){ 
   console.log("clearall fired");
 this.setState({
 todos: []
 });
-};
-
-handleDateChange = date => {
-  this.setState({ selectedDate: date });
 };
 
 handleClickOpen = () => {
@@ -70,32 +76,21 @@ handleClose = () => {
   console.log("handleclose")
 };
 
-
-
-
   render() {
-    const todos = this.state.todos;
-let todoadder = this.state.todoadder;
-
+  const todos = this.state.todos;
     return (<Fragment>
    <MuiThemeProvider theme={theme}>
     <CssBaseline />
     <div className="App">
-
     <Helmet>
-    <meta charSet="utf-8" name="viewport"
-  content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
+    <meta charSet="utf-8" name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
     <title>To do App</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     </Helmet>
-
     <SearchAppBar clearAll={this.clearAll} title="To do App"></SearchAppBar>
     <Todos todos={todos}></Todos>
-    <SimpleTooltips handleClickOpen={this.handleClickOpen} ></SimpleTooltips>
-    <FormDialog open={this.state.open} handleClose={this.handleClose} addToDo={this.addToDo}></FormDialog>
-   
-    
-    
+    <SimpleTooltips handleClickOpen={this.handleClickOpen}></SimpleTooltips>
+    <FormDialog date={this.state.selectedDate} handleDateChange={this.handleDateChange} open={this.state.open} handleClose={this.handleClose} addToDo={this.addToDo}></FormDialog>
     </div>
     </MuiThemeProvider>
     </Fragment>
