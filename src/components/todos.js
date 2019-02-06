@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Grid } from '@material-ui/core';
 import moment from 'moment';
+import countdown from 'countdown';
+
 
 
 
@@ -11,19 +13,43 @@ class Todo extends React.Component {
 constructor(props){
 super(props);
 this.updatedate = this.updatedate.bind(this);
+this.state = {
+  timeleft: null,
+  interval: null
+}
 }
 
-updatedate(this.props.date){
-  let timeleft = moment(this.props.date).startOf('day').fromNow();
+updatedate(){
+  let date = this.props.date;
+  
+ let milisecnds = moment().diff(date, 'miliseconds');
+ let left = moment.duration(milisecnds); 
+ let seconds = left._data.seconds;
+ let minutes = left._data.minutes;
+ let hours = left._data.hours;
+ let days = left._data.days;
+ let timeleft = days + "days" + hours + "hours" + minutes + "minutes" + seconds + "seconds";
+
+ 
   this.setState({
-timeleft: timeleft;
+timeleft: timeleft
   });
 }
 
+componentDidMount(){
+  this.intervalID = setInterval(()=>this.updatedate(), 1000);
+}
 
-  
+componentWillUnmount(){
+  clearInterval(this.intervalID);
+}
 
+render(){
 
+  return(
+    <Paper style={paperstyle}><Typography>{this.props.name}<br></br>Deadline: {moment(this.props.date).format('MMMM Do YYYY, h:mm:ss a')}<br></br>Left: {this.state.timeleft}</Typography></Paper>
+  )
+}
 }
 
 
@@ -66,17 +92,15 @@ const {classes} = this.props;
 let todos = this.props.todos;
 console.log("date in todos", this.props.todos)
 console.log(todos);
-        let todoslist = todos.map((todo, index)=> <Grid item key={todo.name+index}><Paper style={paperstyle}><Typography>{todo.name}<br></br>Deadline: {moment(todo.date).format('MMMM Do YYYY, h:mm:ss a')}</Typography></Paper></Grid>);
+        let todoslist = todos.map((todo, index)=> <Grid item key={todo.name+index}><Todo name={todo.name} date={todo.date}/></Grid>);
     return (   
         <div>
-            <Grid container  direction="row"
-  >
+            <Grid container  direction="row">
         {todoslist}
         </Grid>
         </div>
       );
   }
-
 }
 
 Todos.propTypes = {

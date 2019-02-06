@@ -53,10 +53,7 @@ todos: todos,
 });
 }
 
-estimatetime(todo){
-let deadline = todo.date;
-let timeleft = 
-}
+
 
 
 clearAll(event){ 
